@@ -1,0 +1,88 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/test-app/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:webpack",
+      "outputs": ["{options.outputPath}"],
+      "dependsOn": ["compileProto"],
+      "options": {
+        "outputPath": "dist/packages/test-app",
+        "main": "packages/test-app/src/main.ts",
+        "tsConfig": "packages/test-app/tsconfig.app.json",
+        "assets": ["packages/test-app/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "packages/test-app/src/environments/environment.ts",
+              "with": "packages/test-app/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "build-other": {
+      "executor": "@nrwl/workspace:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "nx run test-app:compileProto"
+          },
+          {
+            "command": "nx run test-app:build-internal"
+          }
+        ],
+        "parallel": false
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/node:node",
+      "options": {
+        "buildTarget": "test-app:build"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "test-app:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/test-app/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/packages/test-app"],
+      "options": {
+        "jestConfig": "packages/test-app/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "compileProto": {
+      "executor": "@nrwl/workspace:run-commands",
+      "inputs": ["{projectRoot}/src/app/test-folder-proto/**/*.proto"],
+      "outputs": ["{projectRoot}/src/app/test-folder-output"],
+      "options": {
+        "commands": [
+          {
+            "command": "timeout 5"
+          },
+          {
+            "command": "echo \"yay\""
+          }
+        ],
+        "parallel": false
+      }
+    }
+  },
+  "tags": []
+}
