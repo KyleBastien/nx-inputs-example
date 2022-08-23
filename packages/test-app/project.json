@@ -27,6 +27,29 @@
         }
       }
     },
+    "build-no-dependsOn": {
+      "executor": "@nrwl/node:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/test-app",
+        "main": "packages/test-app/src/main.ts",
+        "tsConfig": "packages/test-app/tsconfig.app.json",
+        "assets": ["packages/test-app/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "packages/test-app/src/environments/environment.ts",
+              "with": "packages/test-app/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
     "build-other": {
       "executor": "@nrwl/workspace:run-commands",
       "options": {
@@ -35,7 +58,7 @@
             "command": "nx run test-app:compileProto"
           },
           {
-            "command": "nx run test-app:build"
+            "command": "nx run test-app:build-no-dependsOn"
           }
         ],
         "parallel": false
