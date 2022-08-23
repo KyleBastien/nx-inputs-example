@@ -2,5 +2,4 @@ syntax = "proto3";
 
 message SearchRequest {
   string name = 1;
-  string foob = 2;
 }
