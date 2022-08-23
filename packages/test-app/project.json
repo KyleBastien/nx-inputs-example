@@ -35,7 +35,7 @@
             "command": "nx run test-app:compileProto"
           },
           {
-            "command": "nx run test-app:build-internal"
+            "command": "nx run test-app:build"
           }
         ],
         "parallel": false
